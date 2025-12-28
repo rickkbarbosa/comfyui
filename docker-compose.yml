@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: comfy-ui:rocm
+    volumes:
+      - ./comfy/models:/app/ComfyUI/models
+      - ./comfy/models:/app/ComfyUI/output
+      - ./comfy/models:/app/ComfyUI/settings
+      - ./comfy/models:/app/ComfyUI/workflows
+    ports:
+      - 8188:8188
