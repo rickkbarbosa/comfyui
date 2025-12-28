@@ -20,6 +20,11 @@ jobs:
        username: ${{ secrets.DOCKERHUB_USERNAME }}
        password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+    - name: Steps before
+      run: |
+        sudo apt update
+        sudo apt install -y --no-install-recommends docker-buildx-plugin
+
     - name: Build and push to dockerhub
       uses: docker/build-push-action@v5
       with:
