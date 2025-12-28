@@ -20,14 +20,19 @@ jobs:
        username: ${{ secrets.DOCKERHUB_USERNAME }}
        password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Steps before
-      run: |
-        sudo apt update
-        sudo apt install -y --no-install-recommends docker-buildx
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Set up QEMU
+      # Required for building non-native platforms (e.g., ARM on an AMD machine)
+      uses: docker/setup-qemu-action@v1
+
 
     - name: Build and push to dockerhub
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
        context:
        push: true
        tags: rickkbarbosa/comfyui:rocm
+       cache-from: type=gha,scope=${{ runner.os }}-buildx
+       cache-to: type=gha,scope=${{ runner.os }}-buildx,mode=max
