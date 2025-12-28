@@ -1,14 +1,30 @@
-version: "3"
+version: "3.8"
 
 services:
+  comfy-ui-rocm:
+    container_name: comfy-ui-rocm
     build:
       context: .
       dockerfile: Dockerfile
-    image: comfy-ui:rocm
+    image: rickkbarbosa/comfy-ui:rocm
+
+    ports:
+      - "8188:8188"
+
     volumes:
       - ./comfy/models:/app/ComfyUI/models
-      - ./comfy/models:/app/ComfyUI/output
-      - ./comfy/models:/app/ComfyUI/settings
-      - ./comfy/models:/app/ComfyUI/workflows
-    ports:
-      - 8188:8188
+      - ./comfy/output:/app/ComfyUI/output
+      - ./comfy/settings:/app/ComfyUI/settings
+      - ./comfy/workflows:/app/ComfyUI/workflows
+
+    # Necessário para ROCm
+    devices:
+      - /dev/kfd
+      - /dev/dri
+
+    group_add:
+      - video
+
+    shm_size: "8gb"
+
+    restart: unless-stopped
